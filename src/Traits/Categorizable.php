@@ -1,17 +1,37 @@
 <?php
 
+/*
+ * This file is part of Laravel Categorizable.
+ *
+ * (c) DraperStudio <hello@draperstudio.tech>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace DraperStudio\Categorizable\Traits;
 
 use DraperStudio\Categorizable\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Categorizable.
+ *
+ * @author DraperStudio <hello@draperstudio.tech>
+ */
 trait Categorizable
 {
+    /**
+     * @return mixed
+     */
     public function categories()
     {
         return $this->morphToMany(Category::class, 'categorizable', 'categories_relations');
     }
 
+    /**
+     * @return mixed
+     */
     public function categoriesList()
     {
         return $this->categories()
@@ -19,6 +39,9 @@ trait Categorizable
                     ->toArray();
     }
 
+    /**
+     * @param $categories
+     */
     public function categorize($categories)
     {
         foreach ($categories as $category) {
@@ -26,6 +49,9 @@ trait Categorizable
         }
     }
 
+    /**
+     * @param $categories
+     */
     public function uncategorize($categories)
     {
         foreach ($categories as $category) {
@@ -33,6 +59,9 @@ trait Categorizable
         }
     }
 
+    /**
+     * @param $categories
+     */
     public function recategorize($categories)
     {
         $this->categories()->sync([]);
@@ -40,6 +69,9 @@ trait Categorizable
         $this->categorize($categories);
     }
 
+    /**
+     * @param Model $category
+     */
     public function addCategory(Model $category)
     {
         if (!$this->categories->contains($category->getKey())) {
@@ -47,6 +79,9 @@ trait Categorizable
         }
     }
 
+    /**
+     * @param Model $category
+     */
     public function removeCategory(Model $category)
     {
         $this->categories()->detach($category);
